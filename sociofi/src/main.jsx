@@ -14,7 +14,7 @@ const projectId = import.meta.env.VITE_PROJECT_ID
 
 const CoreTestnet = {
   id: 1114,
-  name: 'Core Blockchain Testnet',
+  name: 'Core Testnet',
   iconUrl: '/image.png',
   nativeCurrency: { name: 'Core testnet', symbol: 'tCORE2' , decimals: 18},
   rpcUrls: {
