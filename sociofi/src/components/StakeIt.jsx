@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { ethers } from 'ethers'
 import { useEthersSigner } from '../hooks/useEthersSigner'
-import {CONTRACT_ABI_STAKEIT,CONTRACT_ADDRESS_STAKEIT } from "../utils/stakeIt"
+import {CONTRACT_ABI_STAKEIT,CONTRACT_ADDRESS_STAKEIT } from "../utils/stakeIt";
+import ABI from '../abi/stakeIt.json'
 
 const StakeIt = () => {
     const signer = useEthersSigner();
+    const provider = signer.provider
 
     const [username , setUSername] = useState("");
     const [loading , setLoading] = useState(false);
@@ -24,7 +26,7 @@ const StakeIt = () => {
         try {
             setLoading(true);
 
-            const contract = new ethers.Contract( CONTRACT_ADDRESS_STAKEIT, CONTRACT_ABI_STAKEIT, signer);
+            const contract = new ethers.Contract( CONTRACT_ADDRESS_STAKEIT, ABI, signer);
 
             const tx = await contract.createAccount(username,{value : ethers.parseUnits("1", "wei")});
 
@@ -34,12 +36,33 @@ const StakeIt = () => {
             // })
             // console.log(tx);
 
+            contract.once("AcoountCreated",(user, username , amount) => {
+                console.log("Event:" ,{user, username , amount : amount.toString() });
+
+            })
             
-            
+            const code = await provider.getCode(CONTRACT_ADDRESS_STAKEIT);
+            console.log("Contract code:", code);
+
+             const userAddress = await signer.getAddress();
+             console.log(userAddress);
+
+             const userData = await contract.users(userAddress)
+             console.log(userData);
+                
+             if (userData.isActive) {
+                alert(`Account Created Successfully: ${userData.username}`);
+            } else {
+                alert("Account creation failed. Please try again.");
+            }
+
+            const network = await signer.provider.getNetwork();
+            console.log("Connected Network:", network);
+
         } catch (error) {
             
             console.log(error);
-            alert("Something went wrong")
+            alert(error.data?.message || error.message||"Something went wrong")
         } finally{
             setLoading(false);
         }
