@@ -26,9 +26,15 @@ const StakeIt = () => {
 
             const contract = new ethers.Contract( CONTRACT_ADDRESS_STAKEIT, CONTRACT_ABI_STAKEIT, signer);
 
-            const tx = await contract.createAccount(username,{value : ethers.parseUnits("1", "Wei")});
+            const tx = await contract.createAccount(username,{value : ethers.parseUnits("1", "wei")});
 
             await tx.wait();
+            // contract.on("AcoountCreated", (user , name , amount) => {
+            //     console.log(user , name , amount);
+            // })
+            // console.log(tx);
+
+            
             
         } catch (error) {
             

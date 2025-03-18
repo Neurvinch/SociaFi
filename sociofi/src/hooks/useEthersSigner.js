@@ -20,7 +20,7 @@ export const clientToSigner = (client) => {
 };
 
 
- export const useEthersSigner = ({chainId}) =>{
+ export const useEthersSigner = ({chainId}= {}) =>{
     const {data : client} = useConnectorClient({chainId});
 
     return useMemo( () => (

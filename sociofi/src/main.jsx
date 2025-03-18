@@ -52,7 +52,7 @@ createRoot(document.getElementById('root')).render(
   <StrictMode>
     <WagmiProvider config = {config}>
       <QueryClientProvider client={queryclient}>
-        <RainbowKitProvider theme={theme}chains={ [, sepolia , CoreTestnet]} >
+        <RainbowKitProvider theme={theme}chains={ [ sepolia , CoreTestnet]} >
           <App />
         </RainbowKitProvider>
       </QueryClientProvider>
