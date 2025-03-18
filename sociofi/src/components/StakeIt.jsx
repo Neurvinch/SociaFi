@@ -3,10 +3,10 @@ import { ethers } from 'ethers'
 // import { useEthersSigner } from '../hooks/useEthersSigner'
 import {CONTRACT_ABI_STAKEIT,CONTRACT_ADDRESS_STAKEIT } from "../utils/stakeIt";
 import ABI from '../abi/stakeIt.json'
-import { useSigner } from '../context/SignerContext';
+
 
 const StakeIt = () => {
-    const signer = useSigner()
+   
     // const provider = signer.provider
 
     const [username , setUSername] = useState("");
