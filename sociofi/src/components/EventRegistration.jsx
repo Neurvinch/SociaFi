@@ -3,26 +3,27 @@ import { useAccount , useSimulateContract , useWaitForTransactionReceipt , useWr
  } from 'wagmi'
  import { eventRegistrationContractAddress } from '../utils/EventRegister';
  import ABI  from "../abi/eventregistration.json"
+import { sepolia } from 'viem/chains';
 
 const EventRegistration = () => {
     const {address} = useAccount();
     const[username , setUSername] = useState("");
-    const {useWriteContractAsync} = useWriteContract();
+    const {WriteContractAsync} = useWriteContract();
 
-    const {config : registerConfig} = useSimulateContract({
-        address : eventRegistrationContractAddress,
-        abi : ABI,
-        functionName : "registerUser" ,
-        args : [username],
-        enabled : Boolean(address) && username !== ""
-    });
+    // const {config : registerConfig} = useSimulateContract({
+    //     address : eventRegistrationContractAddress,
+    //     abi : ABI,
+    //     functionName : "registerUser" ,
+    //     args : [username],
+    //     enabled : Boolean(address) && username !== ""
+    // });
 
-    const {data : registerData , write : registerWrite} = useWriteContract(registerConfig);
+    // const {data : registerData , write : registerWrite} = useWriteContract(registerConfig);
 
-    const {isLoading: registerLoading , isSuccess : registerSuccess} = useWaitForTransactionReceipt({
-        hash : registerData?.hash
-    });
-    console.log( registerData)
+    // const {isLoading: registerLoading , isSuccess : registerSuccess} = useWaitForTransactionReceipt({
+    //     hash : registerData?.hash
+    // });
+       
       
     const [eventName, setEventName] = useState("");
     const[eventDescription , setEventDescription] = useState("");
@@ -45,6 +46,24 @@ const EventRegistration = () => {
         hash : createEventData?.hash
     });
     // console.log(hash)
+
+    const handleCreateEvent =  async () => {
+
+      try {
+         const tx = await WriteContractAsync({
+          address : "",
+          abi :ABI,
+          functionName : "createEvent" ,
+          args: [eventName , eventDescription , entryFee , isPublic , startTime , endTime],
+          chain: sepolia,
+          account : address
+         })
+        
+      } catch (error) {
+        console.log(error);
+        
+      }
+    }
      
     
      
@@ -66,6 +85,23 @@ const EventRegistration = () => {
          const {isLoading: registerEventLoading , isSuccess : registerEventSuccess} = useWaitForTransactionReceipt({
             hash : registerEventData?.hash
             });
+            const handleRegisterToEvent = async () => {
+              try {
+                 const tx = await WriteContractAsync({
+                  address : "",
+                  abi: ABI,
+                  functionName : "registerForEvent" ,
+                  args :[registerEventId],
+                  chain : sepolia,
+                  account: address,
+
+                 })
+
+                
+              } catch (error) {
+                console.log(error)
+              }
+            }
 
             
 
@@ -86,7 +122,23 @@ const EventRegistration = () => {
                
             } )
             // console.log(hash)
-            ;
+             
+            const handleGrandAccess = async () => {
+               try { 
+                 const tx = await WriteContractAsync({
+                  address : "",
+                  abi : ABI,
+                  functionName : "grantAccess" ,
+                  args : [grantEventId , grantUsername],
+                  chain: sepolia,
+                  account : address
+                 })
+                
+               } catch (error) {
+                 console.log(error)
+               }
+            }
+
   return (
    <div style={{ padding: "2rem", fontFamily: "Arial, sans-serif" }}>
       <h1>Decentralized Event Management</h1>
