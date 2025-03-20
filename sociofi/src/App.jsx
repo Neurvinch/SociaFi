@@ -8,6 +8,7 @@ import NftMintingnRenting from './componentsOne/NFTRenting'
 import EventRegistration from './componentsOne/EventRegistration'
 import Voting from './componentsOne/Voting'
 import LiveShowAccess from './componentsOne/LiveShowAcess'
+import Navbar from './componentsOne/Navbar'
 // import Home from './api/client-sideInfo.jsx'
 // import HomePage from './pages/HomePage'
  
@@ -26,7 +27,8 @@ function App() {
     <>
     {/* // <HuddleProvider  client={huddleClient}> */}
     <BrowserRouter>
-    <ConnectButton/>
+    <Navbar/>
+   
     <Routes>
       <Route path="/event"  element ={ <EventRegistration/>} />
       <Route path="/stake"  element ={  <StakeIt/>} />
