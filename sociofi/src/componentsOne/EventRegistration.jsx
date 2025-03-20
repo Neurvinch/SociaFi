@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CalendarDays, Clock, Users, Ticket, Lock, Unlock, PlusCircle, UserPlus, ChevronRight } from 'lucide-react';
 import { useAccount, useWriteContract } from 'wagmi';
-import ABI from '../abi/EventRegistration.json';
+import ABI from '../abi/eventregistration.json';
 import { sepolia } from 'viem/chains';
 
 const EventRegistration = () => {
