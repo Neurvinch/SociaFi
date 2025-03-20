@@ -1,77 +1,43 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { ethers } from 'ethers';
-import { useAccount, useSimulateContract, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
+import { useAccount, useWaitForTransactionReceipt, useWriteContract } from 'wagmi';
 import { NFtRentingAddress } from '../utils/NFTRenting';
 import ABI from '../abi/NFTRenting.json';
 import { sepolia } from 'viem/chains';
 
 const NftMintingnRenting = () => {
     const { address } = useAccount();
+    const { writeContractAsync, isPending: isWritePending } = useWriteContract();
 
+    // Mint state
     const [mintTokenId, setMintTokenId] = useState("");
     const [descriptions, setDescriptions] = useState("");
     const [rentalPricePerSecond, setRentalPricePerSecond] = useState("");
+    const [mintTxHash, setMintTxHash] = useState("");
 
-    const {writeContractAsync } = useWriteContract();    
-
-    // const {
-    //     config: mintTokenIdData,
-    // } = useSimulateContract({
-    //     address: NFtRentingAddress,
-    //     abi: ABI,
-    //     functionName: "mintPost",
-    //     args: [
-    //         address,
-    //         Number(mintTokenId),
-    //         descriptions,
-    //         Number(rentalPricePerSecond)
-    //     ],
-    //     enabled: Boolean(address) && mintTokenId !== "" && descriptions !== "" && rentalPricePerSecond !== "",
-    // });
-
-    // const { data: mintData, write: mintWrite } = useWriteContract(mintTokenIdData?.request ? mintTokenIdData : undefined);
-
-    // const { isLoading: mintLoading, isSuccess: mintSuccess } = useWaitForTransactionReceipt({
-    //     hash: mintData?.hash,
-    // });
-
+    // Rent state
     const [rentTokenId, setRentTokenId] = useState("");
     const [duration, setDuration] = useState("");
+    const [rentTxHash, setRentTxHash] = useState("");
 
+    // Calculate rental fee
     const dummyFeePerSecond = "0.00000001";
     const computedRentalFee = duration ? ethers.parseUnits((parseFloat(dummyFeePerSecond) * Number(duration)).toFixed(18), 18) : "0";
 
-    // const {
-    //     data,
-    // } = useSimulateContract({
-    //     address: NFtRentingAddress,
-    //     abi: ABI,
-    //     functionName: "rentPost",
-    //     args: [
-    //         Number(rentTokenId),
-    //         Number(duration)
-    //     ],
-    //     overrides: {
-    //         value: computedRentalFee,
-    //     },
-    //     enabled: Boolean(address) && rentTokenId !== "" && duration !== "",
-    // });
+    // Transaction receipts
+    const { isLoading: mintLoading, isSuccess: mintSuccess } = useWaitForTransactionReceipt({
+        hash: mintTxHash,
+    });
 
-    // const { data: rentData, write: rentWrite } = useWriteContract(data);
-
-    // const {writeContractAsync: rentWriteContractAsync} = useSimulateContract({
-        
-    // })
-
-    // const { isLoading: rentLoading, isSuccess: rentSuccess } = useWaitForTransactionReceipt({
-    //     hash: rentData?.hash,
-    // });
+    const { isLoading: rentLoading, isSuccess: rentSuccess } = useWaitForTransactionReceipt({
+        hash: rentTxHash,
+    });
 
     const handleMint = async () => {
         console.log("Minting with values:", { mintTokenId, descriptions, rentalPricePerSecond });
         try {
-            const tx = await writeContractAsync({
-                address:"0x3328358128832A260C76A4141e19E2A943CD4B6D",
+            const hash = await writeContractAsync({
+                address: NFtRentingAddress || "0x3328358128832A260C76A4141e19E2A943CD4B6D",
                 abi: ABI,
                 functionName: "mintPost",
                 args: [
@@ -80,11 +46,11 @@ const NftMintingnRenting = () => {
                     descriptions,
                     Number(rentalPricePerSecond)
                 ],
-
-                chain:sepolia,
-                account:address
-            })
-
+                chain: sepolia,
+                account: address
+            });
+            
+            setMintTxHash(hash);
         } catch (error) {
             console.error("Minting error:", error);
         }
@@ -93,21 +59,20 @@ const NftMintingnRenting = () => {
     const handleRent = async () => {
         console.log("Renting with values:", { rentTokenId, duration });
         try {
-            const tx = await writeContractAsync({
-                address : "0x3328358128832A260C76A4141e19E2A943CD4B6D",
-                abi : ABI,
-                functionName : "rentPost" ,
-                args : [
+            const hash = await writeContractAsync({
+                address: NFtRentingAddress || "0x3328358128832A260C76A4141e19E2A943CD4B6D",
+                abi: ABI,
+                functionName: "rentPost",
+                args: [
                     Number(rentTokenId),
                     Number(duration)
                 ],
-                overrides : {
-                    value : computedRentalFee
-                },
-                chain:sepolia,
-                account:address
-            })
+                value: computedRentalFee, // Changed from overrides to value
+                chain: sepolia,
+                account: address
+            });
             
+            setRentTxHash(hash);
         } catch (error) {
             console.error("Renting error:", error);
         }
@@ -140,12 +105,15 @@ const NftMintingnRenting = () => {
                         value={rentalPricePerSecond}
                         onChange={(e) => setRentalPricePerSecond(e.target.value)}
                     />
-                    <button onClick={handleMint} disabled={mintLoading}>
+                    <button 
+                        onClick={handleMint} 
+                        disabled={!address || mintLoading || isWritePending}
+                    >
                         {mintLoading ? "Minting..." : "Mint Post NFT"}
                     </button>
                     {mintSuccess && (
                         <p style={{ color: "green" }}>
-                            Mint successful! Transaction hash: {mintData?.hash}
+                            Mint successful! Transaction hash: {mintTxHash}
                         </p>
                     )}
                 </section>
@@ -171,12 +139,15 @@ const NftMintingnRenting = () => {
                         Rental Fee:{" "}
                         {duration && computedRentalFee !== "0" ? ethers.formatUnits(computedRentalFee) : "0"} ETH
                     </p>
-                    <button onClick={handleRent} disabled={rentLoading}>
+                    <button 
+                        onClick={handleRent} 
+                        disabled={!address || rentLoading || isWritePending}
+                    >
                         {rentLoading ? "Processing Rental..." : "Rent Post NFT"}
                     </button>
                     {rentSuccess && (
                         <p style={{ color: "green" }}>
-                            Rental successful! Transaction hash: {rentData?.hash}
+                            Rental successful! Transaction hash: {rentTxHash}
                         </p>
                     )}
                 </section>
