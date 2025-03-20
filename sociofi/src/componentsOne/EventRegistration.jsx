@@ -105,7 +105,8 @@ const EventRegistration = () => {
         abi: ABI,
         functionName: "registerUser",
         args: [username],
-        chain: sepolia,
+        chain: sepolia, 
+          
         account: address,
       });
       
