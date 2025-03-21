@@ -1,28 +1,27 @@
 import React, { useState } from 'react';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { sepolia } from 'viem/chains';
-import ABI from '../abi/Voting.json'; // Assuming you have an ABI file
-// import ABI from '../abi/Voting.json'; // Assuming you have an ABI file
+import ABI from '../abi/Voting.json';
 
-const VOTING_CONTRACT_ADDRESS = "0x1234567890123456789012345678901234567890"; // Replace with your contract address
+const VOTING_CONTRACT_ADDRESS = "0x1234567890123456789012345678901234567890"; 
 
 const Voting = () => {
     const { address } = useAccount();
     const { writeContractAsync, isPending } = useWriteContract();
     
-    // Create poll states
+   
     const [question, setQuestion] = useState("");
     const [options, setOptions] = useState(["", ""]);
     const [startTime, setStartTime] = useState("");
     const [endTime, setEndTime] = useState("");
     const [createPollTxHash, setCreatePollTxHash] = useState("");
     
-    // Vote states
+    
     const [pollId, setPollId] = useState("");
     const [selectedOption, setSelectedOption] = useState("0");
     const [voteTxHash, setVoteTxHash] = useState("");
     
-    // Transaction tracking
+   
     const { isLoading: isCreatePollLoading, isSuccess: isCreatePollSuccess } = 
         useWaitForTransactionReceipt({ hash: createPollTxHash });
     
@@ -48,14 +47,12 @@ const Voting = () => {
         }
     };
     
-    // Convert string date to unix timestamp
+   
     const dateToTimestamp = (dateString) => {
         return Math.floor(new Date(dateString).getTime() / 1000);
     };
     
-    /**
-     * Create a poll and save it on the blockchain
-     */
+   
     const handleCreatePoll = async () => {
         if (!question || options.some(opt => !opt) || !startTime || !endTime) {
             alert("Please fill all fields");
@@ -81,9 +78,7 @@ const Voting = () => {
         }
     };
     
-    /**
-     * Vote on an existing poll
-     */
+    
     const handleVote = async () => {
         if (!pollId) {
             alert("Please enter a poll ID");
@@ -100,6 +95,7 @@ const Voting = () => {
                 account: address,
             });
             
+
             setVoteTxHash(hash);
         } catch (error) {
             console.error("Error voting:", error);
