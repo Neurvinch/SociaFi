@@ -28,7 +28,7 @@ function App() {
     <>
     {/* // <HuddleProvider  client={huddleClient}> */}
     <BrowserRouter>
-    {/* <Navbar/> */}
+    <Navbar/>
    
     <Routes>
       <Route path="/event"  element ={ <EventRegistration/>} />

@@ -10,6 +10,7 @@ const EventRegistration = () => {
   const { address } = useAccount();
   const { writeContractAsync 
    } = useWriteContract();
+
   
   const [activeTab, setActiveTab] = useState('create');
   const [transactionStatus, setTransactionStatus] = useState({ loading: false, success: false, hash: '', error: '' });

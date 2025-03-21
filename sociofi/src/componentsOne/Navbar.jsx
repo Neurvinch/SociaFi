@@ -4,20 +4,15 @@ import { Link } from 'react-router-dom'; // Ensure you have react-router-dom ins
 
 const Navbar = () => {
   return (
-    <nav className="bg-blue-500 p-4">
-      <div className="container mx-auto flex justify-between items-center">
-        <div className="text-white text-lg font-bold">
-          SociaFi
-        </div>
-        <div className="space-x-4">
-          <Link to="/posts" className="text-white hover:text-gray-200">Home</Link>
-          <Link to="/event" className="text-white hover:text-gray-200">Events</Link>
-          <Link to="/voting" className="text-white hover:text-gray-200">Voting</Link>
-          <Link to="/liveshow" className="text-white hover:text-gray-200">LiveShow</Link>
-          <ConnectButton/>
-        </div>
-      </div>
-    </nav>
+    <nav className="hidden md:flex items-center space-x-8 ml-175">
+      <a><Link to="/" className="text-gray-600 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Home</Link></a>
+    <a href="/posts" className="text-gray-600 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Posts</a>
+    <a href="/event" className="text-gray-600 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Events</a>
+    <a href="/voting" className="text-gray-600 hover:text-indigo-600 px-3 py-2 text-sm font-medium">Voting</a>
+    <a href="/liveshow" className="text-gray-600 hover:text-indigo-600 px-3 py-2 text-sm font-medium">LiveShow</a>
+    <button className="ml-4 px-4 py-2 border border-indigo-600 text-indigo-600 rounded-full text-sm font-medium hover:bg-indigo-50">{<ConnectButton/>}</button>
+    
+  </nav>
   );
 };
 

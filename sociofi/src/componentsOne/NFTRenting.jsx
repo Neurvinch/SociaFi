@@ -17,7 +17,7 @@ import { sepolia } from 'viem/chains';
 
 const NftMintingnRenting = () => {
     const { address } = useAccount();
-    const { writeContractAsync, isPending: isWritePending } = useWriteContract();
+    const { writeContractAsync } = useWriteContract();
 
     // State management (same as previous code)
     const [mintTokenId, setMintTokenId] = useState("");
@@ -158,7 +158,7 @@ const NftMintingnRenting = () => {
 
                             <button 
                                 onClick={handleMint}
-                                disabled={!address || mintLoading || isWritePending}
+                                disabled={!address || mintLoading }
                                 className="w-full bg-purple-600 text-white py-3 rounded-xl hover:bg-purple-700 transition flex items-center justify-center"
                             >
                                 {mintLoading ? (
@@ -223,7 +223,7 @@ const NftMintingnRenting = () => {
 
                             <button 
                                 onClick={handleRent}
-                                disabled={!address || rentLoading || isWritePending}
+                                disabled={!address || rentLoading }
                                 className="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition flex items-center justify-center"
                             >
                                 {rentLoading ? (
