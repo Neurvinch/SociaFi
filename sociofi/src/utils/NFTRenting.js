@@ -1,1 +1,1 @@
-export const NFtRentingAddress = "0x3328358128832A260C76A4141e19E2A943CD4B6D"
+export const NFtRentingAddress = "0x5ac26c00D09A88042e85Ddeea61d656D97139c40"

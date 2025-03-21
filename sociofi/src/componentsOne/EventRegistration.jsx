@@ -1,13 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect } from 'react';
 import { CalendarDays, Clock, Users, Ticket, Lock, Unlock, PlusCircle, UserPlus, ChevronRight } from 'lucide-react';
-import { useAccount, useWriteContract } from 'wagmi';
+import { useAccount, useReadContract, useWriteContract } from 'wagmi';
 import ABI from '../abi/eventregistration.json';
 import { sepolia } from 'viem/chains';
-
+import { ethers } from 'ethers';
+import {getContract} from '../utils/EventRegister';
 const EventRegistration = () => {
   // Simulated connected address
   const { address } = useAccount();
-  const { writeContractAsync } = useWriteContract();
+  const { writeContractAsync 
+   } = useWriteContract();
+  
   const [activeTab, setActiveTab] = useState('create');
   const [transactionStatus, setTransactionStatus] = useState({ loading: false, success: false, hash: '', error: '' });
   
@@ -142,6 +145,22 @@ const EventRegistration = () => {
     } catch (error) {
       console.error(error);
       setTransactionStatus({ loading: false, success: false, hash: '', error: 'Grant access failed. Check console for details.' });
+    }
+  };
+
+  const [events , setEvents] = useState([]);
+  const fetchEvents = async () => {
+    if (!window.ethereum) return alert("Install MetaMask");
+
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const contract = getContract(provider);
+
+    try {
+      const eventList = await contract.getAllEvents();
+      setEvents(eventList);
+      console.log(eventList);
+    } catch (error) {
+      console.error("Failed to fetch events:", error);
     }
   };
 
@@ -527,6 +546,14 @@ const EventRegistration = () => {
                     </span>
                   )}
                 </button>
+                <div>
+      <button onClick={fetchEvents}>Load Events</button>
+      <ul>
+        {events.map((event, index) => (
+          <li key={index}>{event.name} - {ethers.formatUnits(event.entryFee)} ETH</li>
+        ))}
+      </ul>
+    </div>
               </div>
             </div>
           </div>

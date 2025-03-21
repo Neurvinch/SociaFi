@@ -47,7 +47,7 @@ const NftMintingnRenting = () => {
             console.log("Minting with values:", { mintTokenId, descriptions, rentalPricePerSecond });
             try {
                 const hash = await writeContractAsync({
-                    address: NFtRentingAddress || "0x3328358128832A260C76A4141e19E2A943CD4B6D",
+                    address: NFtRentingAddress || "0x5ac26c00D09A88042e85Ddeea61d656D97139c40",
                     abi: ABI,
                     functionName: "mintPost",
                     args: [
@@ -70,7 +70,7 @@ const NftMintingnRenting = () => {
             console.log("Renting with values:", { rentTokenId, duration });
             try {
                 const hash = await writeContractAsync({
-                    address: NFtRentingAddress || "0x3328358128832A260C76A4141e19E2A943CD4B6D",
+                    address: NFtRentingAddress || "0x5ac26c00D09A88042e85Ddeea61d656D97139c40",
                     abi: ABI,
                     functionName: "rentPost",
                     args: [

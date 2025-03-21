@@ -9,6 +9,7 @@ import EventRegistration from './componentsOne/EventRegistration'
 import Voting from './componentsOne/Voting'
 import LiveShowAccess from './componentsOne/LiveShowAcess'
 import Navbar from './componentsOne/Navbar'
+import SocialFiHomepage from './componentsOne/Home'
 // import Home from './api/client-sideInfo.jsx'
 // import HomePage from './pages/HomePage'
  
@@ -27,12 +28,12 @@ function App() {
     <>
     {/* // <HuddleProvider  client={huddleClient}> */}
     <BrowserRouter>
-    <Navbar/>
+    {/* <Navbar/> */}
    
     <Routes>
       <Route path="/event"  element ={ <EventRegistration/>} />
       <Route path="/stake"  element ={  <StakeIt/>} />
-
+      <Route path="/"  element ={<SocialFiHomepage/>} />
       
       <Route path="/posts"  element ={ <NftMintingnRenting/>} />
       <Route path="/voting"  element ={ <Voting/>} />

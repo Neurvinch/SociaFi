@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { sepolia } from 'viem/chains';
+import ABI from '../abi/Voting.json'; // Assuming you have an ABI file
 // import ABI from '../abi/Voting.json'; // Assuming you have an ABI file
 
 const VOTING_CONTRACT_ADDRESS = "0x1234567890123456789012345678901234567890"; // Replace with your contract address

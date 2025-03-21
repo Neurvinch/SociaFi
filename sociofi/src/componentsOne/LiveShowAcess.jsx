@@ -24,7 +24,7 @@ const LiveShowAccess = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [txHash, setTxHash] = useState("");
 
-  const { writeContractAsync } = useWriteContract();
+  const { writeContractAsync } = useWriteContract({ chain: sepolia.id});
    
   const handleCreateShow = async () => {
     if (!title || !fee) {
@@ -50,7 +50,7 @@ const LiveShowAccess = () => {
         abi: ABI,
         functionName: "createLiveShow",
         args: [title, parseUnits(fee, "wei")],
-        chain: sepolia,
+       
         account: address
       });
       
